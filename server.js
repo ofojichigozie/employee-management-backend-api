@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+require('dotenv').config();
 
 const adminRoutes = require("./routes/adminRoutes");
 const employeeRoutes = require("./routes/employeeRoutes");
@@ -17,13 +18,13 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/employee", employeeRoutes);
 
 //Connect to MongoDB
-try{
-    mongoose.connect('mongodb+srv://Chigozie:gozlite12345@mongocluster-ujn9i.mongodb.net/test?retryWrites=true&w=majority', {useNewUrlParser: true}, () => {
+mongoose.connect(process.env.DB_CONNECTION, {useNewUrlParser: true}, error => {
+    if(!error){
         console.log('Connected to MongoDB database');
-    });
-}catch(e){
-    console.log(e.message);
-}
+    } else {
+        console.log('ERROR: ' + error);
+    }
+});
 
 //Start the server application
 const PORT = process.env.PORT || 5000;
